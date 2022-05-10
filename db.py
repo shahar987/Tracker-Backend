@@ -1,11 +1,10 @@
 from mongoengine import *
 import json
-
-from models import Checklist
-from models import ClientChecks
-from models import Users
-from models import Card
-from models import EndPoints
+from model import Checklist
+from model import ClientChecks
+from model import Users
+from model import Card
+from model import EndPoints
 
 
 # Insert one document to collection
@@ -30,7 +29,7 @@ def read_user(email):
     if users:
         for endpoint in users:
             print(f'email: {endpoint.email} \npassword:{endpoint.password}')
-            return json.loads(endpoint.to_json()) #לוודא שהGET שולף אימייל וסיסמא ושהפונקציה מתאימה
+            return json.loads(endpoint.to_json())
     else:
         print("user does not exist")
 
