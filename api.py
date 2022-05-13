@@ -3,9 +3,9 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from mongoengine import connect
 
-from EndPoints import create_end_points, read_end_points
-from clientStatusNumbers import create_client, read_client_by_company
-from cruds import create_user, read_user, create_checklist, read_checklist, create_clientChecks, read_clientchecks
+from db import create_end_points, read_end_points
+from db import create_client, read_client_by_company
+from db import create_user, read_user, create_checklist, read_checklist, create_clientChecks, read_clientchecks
 
 app = FastAPI(title='Tracker')
 origins = [
@@ -119,4 +119,5 @@ def new_clientcheck(company: str, client_name: str, client_list: dict) -> dict:
 
 
 if __name__ == '__main__':
+    connect_to_mongo()
     uvicorn.run(app, host="0.0.0.0", port=8000)

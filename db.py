@@ -1,11 +1,11 @@
 from mongoengine import *
 import json
 
-from models import Checklist
-from models import ClientChecks
-from models import Users
-from models import Card
-from models import EndPoints
+from model import Checklist
+from model import ClientChecks
+from model import Users
+from model import Card
+from model import EndPoints
 
 
 # Insert one document to collection

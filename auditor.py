@@ -1,9 +1,5 @@
-import windows_tools.antivirus
-from mongoengine import *
-from models import Users
-from models import Checklist
-from models import ClientChecks
-from crud import create_clientChecks
+
+from db import create_clientChecks
 from datetime import datetime
 import requests
 
@@ -81,8 +77,10 @@ my_dict = {'1' : dict1['system_version'],
         '9' : dict1['chrome_version'],
         '10' : dict1['failed_login_event']}
 
-create_clientChecks('Microsoft', dict1['computer_name'], my_dict)
-process_json(dict1)
+if __name__ == '__main__':
+
+    create_clientChecks('Microsoft', dict1['computer_name'], my_dict)
+    process_json(dict1)
 
 
 #here you put only auditor code
