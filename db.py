@@ -1,5 +1,9 @@
 from mongoengine import *
 import json
+<<<<<<< HEAD
+
+=======
+>>>>>>> d8a59523002a0c0ca24cca02bf2094bc4f3dc40f
 from model import Checklist
 from model import ClientChecks
 from model import Users
@@ -92,12 +96,14 @@ def create_checklist(name, number):
 
 
 # Read checklist by number
-def read_checklist(number):
+def read_checklist():
     print("\nREAD:\n --------------")
-    checklist = Checklist.objects(number=number)
+    checklist = Checklist.objects()
+    checklist_name = []
     if checklist:
         for endpoint in checklist:
-            return json.loads(endpoint.to_json())
+            checklist_name.append(endpoint.name)
+        return checklist_name
     else:
         print("checklist does not exist")
 
@@ -146,7 +152,6 @@ def create_clientChecks(company, client_name, client_list):
         new_checklist = ClientChecks(client_name=client_name, company=company, client_list=client_list)
         new_checklist.save()
         return json.loads(new_checklist.to_json())
-
 
 # Read clientchecks
 def read_clientchecks(company, client_name):
@@ -339,4 +344,6 @@ def delete_end_points(company):
         print("deleted company")
     else:
         print("company does not exist")
+
+
 
