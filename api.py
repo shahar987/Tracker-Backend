@@ -3,9 +3,9 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from mongoengine import connect
 
-from EndPoints import create_end_points, read_end_points
-from clientStatusNumbers import create_client, read_client_by_company
-from cruds import create_user, read_user, create_checklist, read_checklist, create_clientChecks, read_clientchecks
+from db import create_end_points, read_end_points
+from db import create_client, read_client_by_company
+from db import create_user, read_user, create_checklist, read_checklist, create_clientChecks, read_clientchecks
 
 app = FastAPI(title='Tracker')
 origins = [
@@ -45,7 +45,6 @@ def create_card(name: str, error_num: int, ip: str, company: str) -> dict:
     else:
         raise HTTPException(404, 'card already exists')
 
-
 @app.get('/endpoint/{company}')
 def get_endpoint(company: str) -> dict:
     card = read_end_points(company)
@@ -82,13 +81,14 @@ def new_user(company: str, email: str, password: str) -> dict:
         raise HTTPException(404, 'user already exists')
 
 
-@app.get('/checklist/{number}')
-def get_checklist(number: str) -> dict:
-    cl = read_checklist(number)
-    if cl:
-        return cl
+@app.get('/checklist')
+def get_checklist() -> list:
+    client_checklist_name = read_checklist()
+    if client_checklist_name:
+        return client_checklist_name
     else:
         raise HTTPException(404, 'no such checklist')
+
 
 
 @app.post('/checklist/{number}')
@@ -100,11 +100,16 @@ def new_checklist(number: str, name: str) -> dict:
         raise HTTPException(404, 'checklist already exists')
 
 
+
 @app.get('/clientCheck/{company}/{client_name}')
-def get_clientcheck(company: str, client_name: str) -> dict:
-    cl = read_clientchecks(company, client_name)
-    if cl:
-        return cl
+def get_clientcheck(company, client_name) -> dict:
+    client_result = read_clientchecks(company, client_name)
+    list_of_result = []
+    if client_result:
+        for value in client_result["client_list"].values():
+            list_of_result.append(value)
+        return list_of_result
+
     else:
         raise HTTPException(404, 'no such client check')
 

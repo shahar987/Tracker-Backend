@@ -1,11 +1,11 @@
 from mongoengine import *
 import json
 
-from models import Checklist
-from models import ClientChecks
-from models import Users
-from models import Card
-from models import EndPoints
+from model import Checklist
+from model import ClientChecks
+from model import Users
+from model import Card
+from model import EndPoints
 
 
 # Insert one document to collection
@@ -93,12 +93,14 @@ def create_checklist(name, number):
 
 
 # Read checklist by number
-def read_checklist(number):
+def read_checklist():
     print("\nREAD:\n --------------")
-    checklist = Checklist.objects(number=number)
+    checklist = Checklist.objects()
+    checklist_name = []
     if checklist:
         for endpoint in checklist:
-            return json.loads(endpoint.to_json())
+            checklist_name.append(endpoint.name)
+        return checklist_name
     else:
         print("checklist does not exist")
 
@@ -147,7 +149,6 @@ def create_clientChecks(company, client_name, client_list):
         new_checklist = ClientChecks(client_name=client_name, company=company, client_list=client_list)
         new_checklist.save()
         return json.loads(new_checklist.to_json())
-
 
 # Read clientchecks
 def read_clientchecks(company, client_name):
@@ -340,4 +341,6 @@ def delete_end_points(company):
         print("deleted company")
     else:
         print("company does not exist")
+
+
 
