@@ -122,6 +122,15 @@ def new_clientcheck(company: str, client_name: str, client_list: dict) -> dict:
     else:
         raise HTTPException(404, 'client check already exists')
 
+@app.get('/checkNameAndResult/{company}')
+def checkNameAndResult(company: str, client_name: str) -> list:
+    checkNames = read_checklist()
+    checkResult = get_clientcheck(company, client_name)
+    result = []
+    for i in range(len(checkNames)):
+        result.append({"name": checkNames[i], "standard": checkResult[i]})
+    return result
+
 
 if __name__ == '__main__':
     connect_to_mongo()

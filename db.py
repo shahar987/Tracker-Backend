@@ -1,9 +1,6 @@
 from mongoengine import *
 import json
-<<<<<<< HEAD
 
-=======
->>>>>>> d8a59523002a0c0ca24cca02bf2094bc4f3dc40f
 from model import Checklist
 from model import ClientChecks
 from model import Users
