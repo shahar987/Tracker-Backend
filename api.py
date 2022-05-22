@@ -1,11 +1,10 @@
-import uvicorn as uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from mongoengine import connect
-
+from schema import AgentResult
 from db import create_end_points, read_end_points
 from db import create_client, read_client_by_company
 from db import create_user, read_user, create_checklist, read_checklist, create_clientChecks, read_clientchecks
+from auditor import process_json
 
 app = FastAPI(title='Tracker')
 origins = [
@@ -23,9 +22,7 @@ app.add_middleware(
 # http://.../card/google
 
 
-@app.on_event('startup')
-def connect_to_mongo():
-    connect(host="mongodb://localhost:27017/admin")
+
 
 
 @app.get('/card/{company}')
@@ -131,7 +128,8 @@ def checkNameAndResult(company: str, client_name: str) -> list:
         result.append({"name": checkNames[i], "standard": checkResult[i]})
     return result
 
+@app.post('/client/status')
+def new_clientcheck(client_status: AgentResult):
+    process_json(client_status)
 
-if __name__ == '__main__':
-    connect_to_mongo()
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+
