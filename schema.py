@@ -3,6 +3,7 @@ from pydantic import BaseModel
 
 class AgentResult(BaseModel):
         computer_name: str
+        ip_add: str
         system_version: str
         antivirus_installed: bool
         antivirus_enabled: bool

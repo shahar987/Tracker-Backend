@@ -161,17 +161,6 @@ def read_clientchecks(company, client_name):
         print("clientchecks does not exist")
 
 
-# Change the company in checklist
-def update_clientcheck(new_company, client_name, client_list):
-    print("\nUPDATE:\n --------------")
-    clientcheck = ClientChecks.objects(client_name=client_name, client_list=client_list)
-    if clientcheck:
-        print(f'new clientcheck: {new_company}')
-        clientcheck.objects(client_name=client_name, client_list=client_list.update(company=new_company))
-    else:
-        print("clientcheck does not exist")
-
-
 # Change the client name in checklist
 def update_clientcheck(company, new_client_name, client_list):
     print("\nUPDATE:\n --------------")
@@ -182,16 +171,6 @@ def update_clientcheck(company, new_client_name, client_list):
     else:
         print("clientcheck does not exist")
 
-
-# Change the client list in checklist
-def update_clientcheck(company, client_name, new_client_list):
-    print("\nUPDATE:\n --------------")
-    clientcheck = ClientChecks.objects(company=company, client_name=client_name)
-    if clientcheck:
-        print(f'new clientcheck: {new_client_list}')
-        clientcheck.objects(company=company, client_name=client_name).update(client_list=new_client_list)
-    else:
-        print("clientcheck does not exist")
 
 
 # Delete clientcheck company
@@ -280,16 +259,35 @@ def delete_client_by_name(name):
 
 
 # Insert one document to collection table - endpoint
-def create_end_points(total: int, ok: int, company: str):
-    print("\nCREATE:\n --------------")
-    error = total - ok
-    endPoints = EndPoints(total=total,
-                          ok=ok,
-                          error=error,
-                          company=company)
-    print("created")
-    endPoints.save()
-    return json.loads(endPoints.to_json())
+def create_end_points(company: str):
+    error_client_number = 0
+    total_clients_number = 0
+    company_exist = EndPoints.objects(company=company)
+    if company_exist:
+        all_company_card = Card.objects(company=company)
+        for card in all_company_card:
+            if card.error_number > 0:
+                error_client_number = error_client_number + 1
+                total_clients_number = total_clients_number + 1
+            else:
+                total_clients_number = total_clients_number + 1
+        EndPoints.objects(company=company).update(error=error_client_number, ok=(total_clients_number- error_client_number), total=(total_clients_number))
+        print("update company number status")
+    else:
+        all_company_card = Card.objects(company=company)
+        for card in all_company_card:
+            if card.error_number > 0:
+                error_client_number = error_client_number + 1
+                total_clients_number = total_clients_number + 1
+            else:
+                total_clients_number = total_clients_number + 1
+        endPoints = EndPoints(total=total_clients_number,
+                              ok=total_clients_number - error_client_number,
+                              error=error_client_number,
+                              company=company)
+        endPoints.save()
+        print("created new company number status")
+
 
 
 # Read company details by company name

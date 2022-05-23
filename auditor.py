@@ -1,4 +1,4 @@
-from db import create_clientChecks
+from db import create_clientChecks, create_client, create_end_points
 from datetime import datetime
 import requests
 
@@ -23,6 +23,7 @@ def chrome_version(json_before):
     else:
         result['chrome_version'] = False
 
+
 def failed_login_event(json_before):
     today = datetime.today().strftime('%Y-%m-%d')
     counter_date = json_before.failed_login_event.count(today)
@@ -31,6 +32,7 @@ def failed_login_event(json_before):
     else:
         result['failed_login_event'] = False
 
+
 def system_version(json_before):
 
     if json_before.system_version == '10':
@@ -38,13 +40,24 @@ def system_version(json_before):
     else:
         result['chrome_version'] = False
 
+
 def anti_virus(json_before):
     result["antivirus_installed"] = json_before.antivirus_installed
     result["antivirus_enabled"] = json_before.antivirus_enabled
     result["antivirus_up_to_date"] = json_before.antivirus_up_to_date
 
+
 def windows_firewall_is_acvitve(json_before):
     result["windows_firewall_is_active"] = json_before.windows_firewall_is_active
+
+
+def check_num_of_errors(result: dict):
+    count = 0
+    for val in result.values():
+        if val == True:
+            count = count + 1
+    return count
+
 
 def process_json(json_from_agent):
     json_before = json_from_agent
@@ -81,7 +94,9 @@ def process_json(json_from_agent):
                '9': result['chrome_version'],
                '10': result['failed_login_event']}
     create_clientChecks('mix', json_before.computer_name, my_dict)
-
+    error_number = check_num_of_errors(my_dict)
+    create_client(json_before.computer_name, error_number, json_before.ip_add, 'mix')
+    create_end_points('mix')
 
 
 
