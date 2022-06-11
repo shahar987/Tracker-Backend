@@ -143,7 +143,8 @@ def create_clientChecks(company, client_name, client_list):
     print("\nCREATE:\n --------------")
     checklist_exist = ClientChecks.objects(client_name=client_name, company=company)
     if checklist_exist:
-        print("ClientChecks already exist")
+        print("update client checks status")
+        ClientChecks.objects(client_name=client_name, company=company).update(client_name=client_name, company=company, client_list=client_list)
     else:
         print("created")
         new_checklist = ClientChecks(client_name=client_name, company=company, client_list=client_list)

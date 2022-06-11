@@ -16,12 +16,21 @@ result = {'computer_name': 'test',
 
 
 def chrome_version(json_before):
+    currunt_chrome_version = str(json_before.chrome_version)
     url = "https://chromedriver.storage.googleapis.com/LATEST_RELEASE"
     response = requests.request("GET", url)
+    octat_response = response.text.split(".")
+    octat_json = currunt_chrome_version.split(".")
     if json_before.chrome_version == response.text:
         result['chrome_version'] = True
     else:
         result['chrome_version'] = False
+    for i in range(len(octat_json)):
+        if int(octat_response[i]) < int(octat_json[i]):
+            result['chrome_version'] = True
+            break
+
+
 
 
 def failed_login_event(json_before):

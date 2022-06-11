@@ -5,6 +5,8 @@ from db import create_end_points, read_end_points
 from db import create_client, read_client_by_company
 from db import create_user, read_user, create_checklist, read_checklist, create_clientChecks, read_clientchecks
 from auditor import process_json
+import requests
+
 
 app = FastAPI(title='Tracker')
 origins = [
@@ -21,7 +23,9 @@ app.add_middleware(
 
 # http://.../card/google
 
-
+#@app.on_event('startup')
+#def connect_to_mongo():
+    #connect(host="mongodb://localhost:27017/admin")
 
 
 
@@ -131,5 +135,10 @@ def checkNameAndResult(company: str, client_name: str) -> list:
 @app.post('/client/status')
 def new_clientcheck(client_status: AgentResult):
     process_json(client_status)
+    return {"status": "ok"}
+
+@app.post('/firewall')
+def fix_firewall():
+    requests.post(f"http://127.0.0.1:8000/firewall")
 
 
